@@ -1,4 +1,4 @@
-PYTHON=python
+PYTHON=python3
 PYTHONPATH=$(CURDIR)
 
 all: test

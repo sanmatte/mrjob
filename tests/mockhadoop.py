@@ -42,7 +42,7 @@ import glob
 import json
 import os
 import os.path
-import pipes
+import shlex
 import shutil
 import stat
 import sys
@@ -101,8 +101,8 @@ def create_mock_hadoop_script(path):
     with open(path, 'w') as f:
         f.write('#!/bin/sh\n')
         f.write('%s %s "$@"\n' % (
-            pipes.quote(sys.executable),
-            pipes.quote(os.path.abspath(__file__))))
+            shlex.quote(sys.executable),
+            shlex.quote(os.path.abspath(__file__))))
     os.chmod(path, stat.S_IREAD | stat.S_IEXEC)
 
 
@@ -257,7 +257,7 @@ def main(stdin, stdout, stderr, argv, environ):
     # log what commands we ran
     cmd_log_path = os.path.join(get_mock_dir(environ=environ), 'cmd.log')
     with open(cmd_log_path, 'a') as cmd_log:
-        cmd_log.write(' '.join(pipes.quote(arg) for arg in argv[1:]))
+        cmd_log.write(' '.join(shlex.quote(arg) for arg in argv[1:]))
         cmd_log.write('\n')
         cmd_log.flush()
 

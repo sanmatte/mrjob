@@ -36,7 +36,7 @@ mockssh.
 from __future__ import print_function
 
 import os
-import pipes
+import shlex
 import posixpath
 import re
 import stat
@@ -50,8 +50,8 @@ def create_mock_ssh_script(path):
     with open(path, 'w') as f:
         f.write('#!/bin/sh\n')
         f.write('%s %s "$@"\n' % (
-            pipes.quote(sys.executable),
-            pipes.quote(os.path.abspath(__file__))))
+            shlex.quote(sys.executable),
+            shlex.quote(os.path.abspath(__file__))))
     os.chmod(path, stat.S_IREAD | stat.S_IEXEC)
 
 
@@ -231,7 +231,7 @@ def main(stdin, stdout, stderr, args, environ):
             return run(worker_host, remote_args[remote_arg_pos + 1:],
                        stdout, stderr, environ, worker_key_file)
 
-        cmd_line = ' '.join(pipes.quote(x) for x in remote_args)
+        cmd_line = ' '.join(shlex.quote(x) for x in remote_args)
         print("Command line not recognized: %s" % cmd_line, file=stderr)
 
         return 1

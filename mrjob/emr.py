@@ -20,7 +20,7 @@ import json
 import logging
 import os
 import os.path
-import pipes
+import shlex
 import posixpath
 import re
 import time
@@ -2315,17 +2315,17 @@ class EMRJobRunner(HadoopInTheCloudJobRunner, LogInterpretationMixin):
 
         # make working dir
         working_dir = self._master_node_setup_working_dir()
-        out.append('  mkdir -p %s' % pipes.quote(working_dir))
-        out.append('  cd %s' % pipes.quote(working_dir))
+        out.append('  mkdir -p %s' % shlex.quote(working_dir))
+        out.append('  cd %s' % shlex.quote(working_dir))
         out.append('')
 
         for name, path in sorted(
                 self._master_node_setup_mgr.name_to_path('file').items()):
             uri = self._upload_mgr.uri(path)
             out.append('  %s %s %s' % (
-                self._cp_to_local_cmd(), pipes.quote(uri), pipes.quote(name)))
+                self._cp_to_local_cmd(), shlex.quote(uri), shlex.quote(name)))
             # imitate Hadoop Distributed Cache
-            out.append('  chmod u+rx %s' % pipes.quote(name))
+            out.append('  chmod u+rx %s' % shlex.quote(name))
 
         # at some point we will probably run commands as well (see #1336)
 
